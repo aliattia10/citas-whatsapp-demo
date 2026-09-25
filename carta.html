@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Carta · Sidrería El Llagar (demo)</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22%3E%3Ctext y=%22.9em%22 font-size=%2290%22%3E%F0%9F%93%85%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="style.css">
+<style>:root{--c:#2f5d34}.plato{display:flex;justify-content:space-between;gap:10px;padding:9px 0;border-bottom:1px dashed #e3e3e3}.plato small{display:block;color:var(--mut)}.cat{position:sticky;top:0;background:var(--bg);padding:8px 0;display:flex;gap:6px;overflow-x:auto;z-index:2}</style>
+<script src="config.js"></script><script src="common.js"></script>
+</head>
+<body>
+<header class="hero"><h1>Sidrería El Llagar</h1><p>Carta digital · Oviedo (negocio ficticio)</p></header>
+<main>
+  <div class="cat noprint" id="cats"></div>
+  <div id="carta"></div>
+  <div class="card"><h2>¿Reservar mesa?</h2><p class="mut">Escríbenos y te guardamos sitio.</p>
+  <a class="btn btn-wa" id="res" target="_blank" rel="noopener">Reservar mesa por WhatsApp</a></div>
+</main>
+<footer>Precios con IVA incluido · Consulta alérgenos al personal · Demo</footer>
+<script>
+const CARTA = {
+  "Para picar": [["Chorizo a la sidra", 9, ""], ["Tabla de quesos asturianos", 14, "Cabrales, Afuega'l pitu, Gamonéu"], ["Croquetas caseras de jamón (8 ud.)", 10, ""], ["Pulpo a la gallega", 18, ""]],
+  "Platos": [["Fabada asturiana", 15, "Con compango"], ["Cachopo de ternera", 24, "Para compartir"], ["Merluza a la sidra", 19, ""], ["Chuletón (1 kg)", 45, "Precio por pieza"]],
+  "Postres": [["Arroz con leche requemado", 5.5, ""], ["Tarta de queso casera", 6, ""], ["Frixuelos", 5, ""]],
+  "Bebidas": [["Botella de sidra natural", 4, "Escanciado incluido"], ["Sidra de nueva expresión", 9, ""], ["Vino de la casa (copa)", 2.8, ""], ["Agua / refresco", 2.2, ""]]
+};
+const cats = document.getElementById("cats"), carta = document.getElementById("carta");
+Object.entries(CARTA).forEach(([cat, platos], i) => {
+  const id = "c" + i;
+  cats.insertAdjacentHTML("beforeend", `<a class="btn btn-sm btn-lt" href="#${id}">${cat}</a>`);
+  carta.insertAdjacentHTML("beforeend", `<div class="card" id="${id}"><h2>${cat}</h2>` + platos.map(([n, p, d]) =>
+    `<div class="plato"><div>${n}${d ? `<small>${d}</small>` : ""}</div><b>${p.toFixed(2).replace(".", ",")} €</b></div>`).join("") + `</div>`);
+});
+document.getElementById("res").href = U.waLink("34600000000", "Hola, quería reservar mesa en Sidrería El Llagar para __ personas el día __ a las __. ¡Gracias!");
+</script>
+</body>
+</html>

@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Pide cita · Peluquería Lúa (demo)</title>
+<meta name="description" content="Pide tu cita en 20 segundos y confírmala por WhatsApp.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22%3E%3Ctext y=%22.9em%22 font-size=%2290%22%3E%F0%9F%93%85%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="style.css">
+<script src="config.js"></script><script src="common.js"></script>
+</head>
+<body>
+<header class="hero">
+  <h1 id="nom"></h1>
+  <p id="sub"></p>
+</header>
+<main>
+  <div class="card">
+    <h2><span class="paso">1</span>¿Qué te hacemos?</h2>
+    <div class="grid" id="servicios"></div>
+  </div>
+  <div class="card">
+    <h2><span class="paso">2</span>Elige día</h2>
+    <div class="dias" id="dias"></div>
+  </div>
+  <div class="card">
+    <h2><span class="paso">3</span>Elige hora</h2>
+    <div class="horas" id="horas"><span class="mut">Primero elige un día.</span></div>
+  </div>
+  <div class="card">
+    <h2><span class="paso">4</span>Tus datos</h2>
+    <label for="nombre">Nombre</label>
+    <input id="nombre" autocomplete="given-name" placeholder="Ej.: Marta">
+    <label for="nota">Algo que debamos saber (opcional)</label>
+    <input id="nota" placeholder="Ej.: pelo largo, vengo con mi hija…">
+  </div>
+  <div class="card">
+    <h2>Tu mensaje</h2>
+    <div class="preview" id="preview">Completa los pasos y aquí verás el mensaje.</div>
+    <p class="mut">Al pulsar se abre WhatsApp con el mensaje ya escrito. Solo tienes que darle a enviar y te confirmamos la cita.</p>
+    <a class="btn btn-wa" id="enviar" aria-disabled="true" target="_blank" rel="noopener">Pedir cita por WhatsApp</a>
+  </div>
+  <p class="mut" style="text-align:center"><a href="resena.html">¿Ya viniste? Déjanos tu opinión</a></p>
+</main>
+<footer id="pie"></footer>
+<script>
+const { N, DIAS, fechaLarga, iso, waLink } = U;
+const st = { servicio: null, dia: null, hora: null };
+document.getElementById("nom").textContent = N.nombre;
+document.getElementById("sub").textContent = `${N.tipo} · ${N.ciudad} — pide tu cita en 20 segundos`;
+document.getElementById("pie").textContent = `${N.nombre} · ${N.direccion}`;
+
+const sv = document.getElementById("servicios");
+N.servicios.forEach((s, i) => {
+  const b = document.createElement("button");
+  b.className = "opt"; b.innerHTML = `<b>${s.nombre}</b><small>${s.duracion} min · ${s.precio} €</small>`;
+  b.onclick = () => { st.servicio = i; st.hora = null; marcar(sv, b); pintarHoras(); actualizar(); };
+  sv.appendChild(b);
+});
+
+const dv = document.getElementById("dias");
+const hoy = new Date(); hoy.setHours(0,0,0,0);
+for (let k = 0; k < N.diasVista; k++) {
+  const d = new Date(hoy); d.setDate(hoy.getDate() + k);
+  const b = document.createElement("button");
+  b.className = "opt";
+  b.innerHTML = `<b>${k === 0 ? "Hoy" : k === 1 ? "Mañana" : DIAS[d.getDay()].slice(0,3)}</b><small>${d.getDate()}/${d.getMonth()+1}</small>`;
+  if (!N.horario[d.getDay()]) b.disabled = true;
+  b.onclick = () => { st.dia = d; st.hora = null; marcar(dv, b); pintarHoras(); actualizar(); };
+  dv.appendChild(b);
+}
+
+function aMin(h) { const [a, b] = h.split(":").map(Number); return a * 60 + b; }
+function aHora(m) { return String(Math.floor(m/60)).padStart(2,"0") + ":" + String(m%60).padStart(2,"0"); }
+function pintarHoras() {
+  const hv = document.getElementById("horas"); hv.innerHTML = "";
+  if (!st.dia) { hv.innerHTML = '<span class="mut">Primero elige un día.</span>'; return; }
+  const tramos = N.horario[st.dia.getDay()] || [];
+  const dur = st.servicio != null ? N.servicios[st.servicio].duracion : N.intervaloMin;
+  const ahora = new Date(); const esHoy = iso(st.dia) === iso(ahora);
+  const minAhora = ahora.getHours() * 60 + ahora.getMinutes() + 60;
+  let n = 0;
+  for (let t = 0; t < tramos.length; t += 2) {
+    for (let m = aMin(tramos[t]); m + dur <= aMin(tramos[t+1]); m += N.intervaloMin) {
+      if (esHoy && m < minAhora) continue;
+      const h = aHora(m); const b = document.createElement("button");
+      b.className = "opt"; b.textContent = h;
+      b.onclick = () => { st.hora = h; marcar(hv, b); actualizar(); };
+      hv.appendChild(b); n++;
+    }
+  }
+  if (!n) hv.innerHTML = '<span class="mut">No quedan horas este día. Prueba otro.</span>';
+}
+function marcar(cont, b) { cont.querySelectorAll(".opt").forEach(x => x.classList.remove("sel")); b.classList.add("sel"); }
+function actualizar() {
+  const nombre = document.getElementById("nombre").value.trim();
+  const nota = document.getElementById("nota").value.trim();
+  const a = document.getElementById("enviar");
+  const ok = st.servicio != null && st.dia && st.hora && nombre;
+  const s = st.servicio != null ? N.servicios[st.servicio] : null;
+  const msg = `Hola, soy ${nombre || "…"}. Me gustaría pedir cita en ${N.nombre}:\n` +
+    `• Servicio: ${s ? s.nombre : "…"}\n• Día: ${st.dia ? fechaLarga(st.dia) : "…"}\n• Hora: ${st.hora || "…"}` +
+    (nota ? `\n• Nota: ${nota}` : "") + `\n¿Me la confirmáis? ¡Gracias!`;
+  document.getElementById("preview").textContent = msg;
+  a.href = waLink(N.whatsapp, msg);
+  a.setAttribute("aria-disabled", ok ? "false" : "true");
+}
+document.getElementById("nombre").oninput = actualizar;
+document.getElementById("nota").oninput = actualizar;
+</script>
+</body>
+</html>

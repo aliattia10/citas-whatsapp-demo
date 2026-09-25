@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Tu opinión · Peluquería Lúa (demo)</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22%3E%3Ctext y=%22.9em%22 font-size=%2290%22%3E%F0%9F%93%85%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="style.css">
+<script src="config.js"></script><script src="common.js"></script>
+</head>
+<body>
+<header class="hero"><h1 id="nom"></h1><p>¡Gracias por tu visita!</p></header>
+<main>
+  <div class="card" style="text-align:center">
+    <div class="stars">★★★★★</div>
+    <h2>¿Nos dejas tu opinión en Google?</h2>
+    <p>Somos un negocio pequeño de <span id="ciu"></span> y cada reseña nos ayuda muchísimo. Tarda menos de 30 segundos.</p>
+    <a class="btn btn-c" id="g" target="_blank" rel="noopener" style="width:100%">Escribir reseña en Google</a>
+    <p class="mut" style="margin-top:14px">¿Algo que podamos mejorar? También puedes contárnoslo directamente:</p>
+    <a class="btn btn-lt btn-sm" id="w" target="_blank" rel="noopener">Escribirnos por WhatsApp</a>
+  </div>
+  <p class="mut" style="text-align:center"><a href="cita.html">Pedir otra cita</a></p>
+</main>
+<script>
+const { N, waLink } = U;
+document.getElementById("nom").textContent = N.nombre;
+document.getElementById("ciu").textContent = N.ciudad;
+const g = document.getElementById("g");
+g.href = N.googleResenas;
+if (N.demo) g.onclick = e => { e.preventDefault(); alert("En la versión real, este botón abre directamente la ventana de reseña de Google de tu negocio."); };
+document.getElementById("w").href = waLink(N.whatsapp, `Hola, soy cliente de ${N.nombre} y quería comentaros algo: `);
+</script>
+</body>
+</html>

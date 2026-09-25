@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Panel del negocio · Peluquería Lúa (demo)</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22%3E%3Ctext y=%22.9em%22 font-size=%2290%22%3E%F0%9F%93%85%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="style.css">
+<script src="config.js"></script><script src="common.js"></script>
+</head>
+<body>
+<header class="hero">
+  <h1>Panel de <span id="nom"></span></h1>
+  <p>Citas, recordatorios y reseñas en un toque · los datos se guardan solo en este móvil</p>
+</header>
+<main>
+  <div class="tabs noprint">
+    <button class="btn btn-sm btn-lt sel" data-tab="citas">📅 Citas</button>
+    <button class="btn btn-sm btn-lt" data-tab="clientes">👥 Clientes</button>
+    <button class="btn btn-sm btn-lt" data-tab="nueva">➕ Nueva cita</button>
+    <a class="btn btn-sm btn-lt" href="qr.html">🔳 Carteles QR</a>
+  </div>
+
+  <section id="tab-citas">
+    <div class="card">
+      <h2>Mañana <span class="mut" id="lblManana"></span></h2>
+      <p class="mut">Pulsa «Recordar» y WhatsApp se abre con el recordatorio escrito. Menos plantones, cero trabajo.</p>
+      <div id="listaManana"></div>
+    </div>
+    <div class="card">
+      <h2>Hoy <span class="mut" id="lblHoy"></span></h2>
+      <p class="mut">Cuando termine la cita, pulsa «Pedir reseña» para pedirle su opinión en Google.</p>
+      <div id="listaHoy"></div>
+    </div>
+    <div class="card">
+      <h2>Próximos días</h2>
+      <div id="listaProx"></div>
+    </div>
+  </section>
+
+  <section id="tab-clientes" hidden>
+    <div class="card">
+      <h2>Clientes</h2>
+      <p class="mut">Los que llevan más de 45 días sin venir aparecen con el botón «Recuperar».</p>
+      <div id="listaClientes"></div>
+      <p class="row" style="margin-top:12px"><button class="btn btn-sm btn-lt" id="csv">Descargar Excel (CSV)</button>
+      <button class="btn btn-sm btn-lt" id="reset">Restaurar datos de ejemplo</button></p>
+    </div>
+  </section>
+
+  <section id="tab-nueva" hidden>
+    <div class="card">
+      <h2>Pegar mensaje de reserva</h2>
+      <p class="mut">Copia el mensaje que te llegó por WhatsApp desde tu página de citas y pégalo aquí: se rellena solo.</p>
+      <textarea id="pegar" rows="5" placeholder="Hola, soy Marta. Me gustaría pedir cita…"></textarea>
+      <button class="btn btn-sm btn-lt" id="leer" style="margin-top:8px">Rellenar desde el mensaje</button>
+    </div>
+    <div class="card">
+      <h2>Datos de la cita</h2>
+      <label>Nombre</label><input id="fNombre">
+      <label>Teléfono (WhatsApp)</label><input id="fTel" inputmode="tel" placeholder="6XX XXX XXX">
+      <label>Servicio</label><select id="fServicio"></select>
+      <div class="row"><div style="flex:1"><label>Día</label><input id="fFecha" type="date"></div>
+      <div style="flex:1"><label>Hora</label><input id="fHora" type="time" step="900"></div></div>
+      <button class="btn btn-c" id="guardar" style="margin-top:12px;width:100%">Guardar cita</button>
+    </div>
+  </section>
+</main>
+<footer>Demo · Panel sin servidor: nada sale de este dispositivo salvo los mensajes que tú envías.</footer>
+<script>
+const { N, fechaLarga, iso, desdeIso, plantilla, waLink } = U;
+document.getElementById("nom").textContent = N.nombre;
+const KEY = "citas_" + N.nombre;
+function hoyMas(k) { const d = new Date(); d.setHours(0,0,0,0); d.setDate(d.getDate() + k); return iso(d); }
+function ejemplo() {
+  // Datos ficticios. Teléfonos 34600000xxx de ejemplo (en modo demo no se usan).
+  const s = N.servicios.map(x => x.nombre);
+  return [
+    { nombre: "Marta G.",    tel: "34600000101", servicio: s[0], fecha: hoyMas(1),  hora: "10:00" },
+    { nombre: "Javier R.",   tel: "34600000102", servicio: s[1], fecha: hoyMas(1),  hora: "11:30" },
+    { nombre: "Lucía F.",    tel: "34600000103", servicio: s[2], fecha: hoyMas(1),  hora: "17:00" },
+    { nombre: "Ana M.",      tel: "34600000104", servicio: s[4], fecha: hoyMas(0),  hora: "12:00" },
+    { nombre: "Pablo S.",    tel: "34600000105", servicio: s[1], fecha: hoyMas(0),  hora: "18:30" },
+    { nombre: "Carmen L.",   tel: "34600000106", servicio: s[3], fecha: hoyMas(3),  hora: "09:30" },
+    { nombre: "Nerea P.",    tel: "34600000107", servicio: s[0], fecha: hoyMas(-60), hora: "10:30" },
+    { nombre: "Iván D.",     tel: "34600000108", servicio: s[1], fecha: hoyMas(-75), hora: "19:00" },
+    { nombre: "Marta G.",    tel: "34600000101", servicio: s[5], fecha: hoyMas(-30), hora: "16:30" }
+  ].map((c, i) => ({ id: "e" + i, ...c, recordada: false, resena: false }));
+}
+let citas = JSON.parse(localStorage.getItem(KEY) || "null") || ejemplo();
+function guardar() { localStorage.setItem(KEY, JSON.stringify(citas)); pintar(); }
+
+function vars(c) { return { nombre: c.nombre.split(" ")[0], negocio: N.nombre, fecha: fechaLarga(desdeIso(c.fecha)), hora: c.hora, servicio: c.servicio, enlace: new URL("resena.html", location.href).href }; }
+function fila(c, modo) {
+  const div = document.createElement("div");
+  div.style.cssText = "display:flex;justify-content:space-between;gap:8px;align-items:center;padding:9px 0;border-bottom:1px solid #eee";
+  const info = `<div><b>${c.hora}</b> · ${c.nombre}<br><span class="mut">${c.servicio}${modo === "prox" ? " · " + fechaLarga(desdeIso(c.fecha)) : ""}</span></div>`;
+  let btns = "";
+  if (modo === "manana") btns = `<a class="btn btn-sm ${c.recordada ? "btn-lt" : "btn-c"}" target="_blank" rel="noopener" data-acc="rec" data-id="${c.id}" href="${waLink(c.tel, plantilla(N.textos.recordatorio, vars(c)))}">${c.recordada ? "✓ Recordada" : "Recordar"}</a>`;
+  if (modo === "hoy") btns = `<a class="btn btn-sm ${c.resena ? "btn-lt" : "btn-c"}" target="_blank" rel="noopener" data-acc="res" data-id="${c.id}" href="${waLink(c.tel, plantilla(N.textos.resena, vars(c)))}">${c.resena ? "✓ Pedida" : "Pedir reseña"}</a>`;
+  btns += ` <button class="btn btn-sm btn-lt" data-acc="del" data-id="${c.id}" title="Borrar">✕</button>`;
+  div.innerHTML = info + `<div class="row" style="flex-wrap:nowrap">${btns}</div>`;
+  return div;
+}
+function lista(id, arr, modo) {
+  const el = document.getElementById(id); el.innerHTML = "";
+  if (!arr.length) { el.innerHTML = '<p class="mut">Sin citas.</p>'; return; }
+  arr.sort((a, b) => (a.fecha + a.hora).localeCompare(b.fecha + b.hora)).forEach(c => el.appendChild(fila(c, modo)));
+}
+function pintar() {
+  const h = hoyMas(0), m = hoyMas(1);
+  document.getElementById("lblHoy").textContent = "· " + fechaLarga(desdeIso(h));
+  document.getElementById("lblManana").textContent = "· " + fechaLarga(desdeIso(m));
+  lista("listaManana", citas.filter(c => c.fecha === m), "manana");
+  lista("listaHoy", citas.filter(c => c.fecha === h), "hoy");
+  lista("listaProx", citas.filter(c => c.fecha > m), "prox");
+  // clientes
+  const mapa = {};
+  citas.forEach(c => { const k = c.tel || c.nombre; (mapa[k] ||= { nombre: c.nombre, tel: c.tel, visitas: 0, ultima: "" });
+    if (c.fecha <= h) { mapa[k].visitas++; if (c.fecha > mapa[k].ultima) mapa[k].ultima = c.fecha; } });
+  const lc = document.getElementById("listaClientes");
+  const hoyD = desdeIso(h);
+  let html = "<table><tr><th>Cliente</th><th>Última visita</th><th></th></tr>";
+  Object.values(mapa).sort((a, b) => a.ultima.localeCompare(b.ultima)).forEach(cl => {
+    const dias = cl.ultima ? Math.round((hoyD - desdeIso(cl.ultima)) / 864e5) : null;
+    const btn = dias != null && dias > 45 ? `<a class="btn btn-sm btn-c" target="_blank" rel="noopener" href="${waLink(cl.tel, plantilla(N.textos.reactivar, { nombre: cl.nombre.split(" ")[0], negocio: N.nombre }))}">Recuperar</a>` : "";
+    html += `<tr><td>${cl.nombre}<br><span class="mut">${cl.visitas} visita(s)</span></td><td>${dias == null ? "Aún no ha venido" : "hace " + dias + " días"}</td><td>${btn}</td></tr>`;
+  });
+  lc.innerHTML = html + "</table>";
+}
+document.body.addEventListener("click", e => {
+  const t = e.target.closest("[data-acc]"); if (!t) return;
+  const c = citas.find(x => x.id === t.dataset.id); if (!c) return;
+  if (t.dataset.acc === "rec") { c.recordada = true; setTimeout(guardar, 50); }
+  if (t.dataset.acc === "res") { c.resena = true; setTimeout(guardar, 50); }
+  if (t.dataset.acc === "del" && confirm("¿Borrar la cita de " + c.nombre + "?")) { citas = citas.filter(x => x !== c); guardar(); }
+});
+document.querySelectorAll("[data-tab]").forEach(b => b.onclick = () => {
+  document.querySelectorAll("[data-tab]").forEach(x => x.classList.toggle("sel", x === b));
+  ["citas","clientes","nueva"].forEach(t => document.getElementById("tab-" + t).hidden = t !== b.dataset.tab);
+});
+const fs = document.getElementById("fServicio");
+N.servicios.forEach(s => fs.add(new Option(s.nombre, s.nombre)));
+document.getElementById("fFecha").value = hoyMas(1);
+document.getElementById("leer").onclick = () => {
+  const t = document.getElementById("pegar").value;
+  const nom = t.match(/soy\s+([^.\n]+)/i); if (nom) document.getElementById("fNombre").value = nom[1].trim();
+  const sv = t.match(/Servicio:\s*(.+)/i); if (sv) fs.value = sv[1].trim();
+  const hr = t.match(/Hora:\s*(\d{1,2}:\d{2})/i); if (hr) document.getElementById("fHora").value = hr[1].padStart(5, "0");
+  const dm = t.match(/Día:\s*\S+\s+(\d{1,2})\s+de\s+(\w+)/i);
+  if (dm) { const mes = U.MESES.indexOf(dm[2].toLowerCase()); if (mes >= 0) { const d = new Date(); let y = d.getFullYear(); if (mes < d.getMonth()) y++; document.getElementById("fFecha").value = iso(new Date(y, mes, +dm[1])); } }
+};
+document.getElementById("guardar").onclick = () => {
+  const c = { id: "c" + Date.now(), nombre: fNombre.value.trim(), tel: fTel.value.replace(/\D/g, ""), servicio: fs.value, fecha: fFecha.value, hora: fHora.value, recordada: false, resena: false };
+  if (!c.nombre || !c.fecha || !c.hora) { alert("Falta nombre, día u hora."); return; }
+  if (c.tel && c.tel.length === 9) c.tel = "34" + c.tel;
+  citas.push(c); guardar(); alert("Cita guardada ✔"); document.querySelector('[data-tab="citas"]').click();
+};
+document.getElementById("csv").onclick = () => {
+  const rows = [["Nombre","Teléfono","Servicio","Fecha","Hora"], ...citas.map(c => [c.nombre, c.tel, c.servicio, c.fecha, c.hora])];
+  const blob = new Blob(["\ufeff" + rows.map(r => r.map(v => `"${String(v).replace(/"/g, '""')}"`).join(";")).join("\n")], { type: "text/csv" });
+  const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = "clientes.csv"; a.click();
+};
+document.getElementById("reset").onclick = () => { if (confirm("¿Volver a los datos de ejemplo?")) { citas = ejemplo(); guardar(); } };
+pintar();
+</script>
+</body>
+</html>

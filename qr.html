@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Carteles QR · Peluquería Lúa (demo)</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22%3E%3Ctext y=%22.9em%22 font-size=%2290%22%3E%F0%9F%93%85%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="style.css">
+<script src="vendor/qrcode.js"></script>
+<script src="config.js"></script><script src="common.js"></script>
+</head>
+<body>
+<header class="hero noprint"><h1>Carteles QR para imprimir</h1><p>Mostrador, espejo, escaparate o tarjeta</p></header>
+<main>
+  <div class="qrbox">
+    <div class="card"><h2 id="n1"></h2><div id="q1"></div><p><b>Pide tu cita por WhatsApp</b><br><span class="mut">Escanea con la cámara del móvil</span></p></div>
+    <div class="card"><h2 id="n2"></h2><div id="q2"></div><p><b>¿Te ha gustado? ¡Déjanos tu reseña!</b><br><span class="mut">Escanea y valóranos en Google</span></p></div>
+  </div>
+  <p class="noprint" style="text-align:center"><button class="btn btn-c" onclick="print()">Imprimir</button> <a class="btn btn-lt" href="panel.html">Volver al panel</a></p>
+</main>
+<script>
+const { N } = U;
+function qr(el, url) { const q = qrcode(0, "M"); q.addData(url); q.make(); document.getElementById(el).innerHTML = q.createSvgTag({ cellSize: 6, margin: 2, scalable: true }); document.querySelector("#" + el + " svg").style.width = "220px"; }
+document.getElementById("n1").textContent = N.nombre; document.getElementById("n2").textContent = N.nombre;
+qr("q1", new URL("cita.html", location.href).href);
+qr("q2", new URL("resena.html", location.href).href);
+</script>
+</body>
+</html>
