@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://citas-wa-oviedo-ali.netlify.app/sitemap.xml

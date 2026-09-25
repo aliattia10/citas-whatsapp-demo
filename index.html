@@ -2,35 +2,105 @@
 <html lang="es">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Citas por WhatsApp para tu negocio · Demo</title>
-<meta name="description" content="Página de citas por WhatsApp, recordatorios en un toque y reseñas de Google para negocios de Oviedo. Demo.">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22%3E%3Ctext y=%22.9em%22 font-size=%2290%22%3E%F0%9F%93%85%3C/text%3E%3C/svg%3E">
+<title>Citas por WhatsApp para negocios de Oviedo y Gijón | Demo gratis y precio</title>
+<meta name="description" content="Página de citas por WhatsApp, recordatorios en un toque y más reseñas en Google para peluquerías, barberías, fisios y estética de Oviedo y Gijón. Pruébalo gratis. Instalación 79€.">
+<link rel="canonical" href="https://citas-wa-oviedo-ali.netlify.app/">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22%3E%3Crect width=%22100%22 height=%22100%22 rx=%2222%22 fill=%22%237a3e65%22/%3E%3Ctext x=%2250%22 y=%2268%22 font-size=%2256%22 text-anchor=%22middle%22 fill=%22white%22 font-family=%22Arial%22 font-weight=%22bold%22%3EC%3C/text%3E%3C/svg%3E">
+<meta name="theme-color" content="#7a3e65">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="es_ES">
+<meta property="og:site_name" content="Citas por WhatsApp · Ali Attia">
+<meta property="og:title" content="Citas por WhatsApp para tu negocio en Oviedo y Gijón">
+<meta property="og:description" content="Tus clientes piden cita en 20 segundos y te llega un WhatsApp ordenado. Recordatorios en un toque y más reseñas en Google. Pruébalo con un negocio de ejemplo.">
+<meta property="og:url" content="https://citas-wa-oviedo-ali.netlify.app/">
+<meta property="og:image" content="https://citas-wa-oviedo-ali.netlify.app/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://citas-wa-oviedo-ali.netlify.app/og-image.png">
 <link rel="stylesheet" href="style.css">
+<style>
+.lista{list-style:none;padding:0;margin:0}.lista li{padding:8px 0 8px 22px;position:relative;border-top:1px solid #f0ebe8}.lista li:first-child{border-top:0}
+.lista li:before{content:"";position:absolute;left:4px;top:16px;width:8px;height:8px;border-radius:50%;background:var(--c)}
+.precios{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px}
+.precio{border:1.5px solid #e2dcd8;border-radius:12px;padding:12px}.precio b{display:block;font-size:26px;color:var(--c)}.precio.dest{border-color:var(--c)}
+.precio small{color:var(--mut);display:block;font-size:12.5px}
+details{border-top:1px solid #f0ebe8;padding:10px 0}details summary{cursor:pointer;font-weight:600}details p{margin:8px 0 0;color:#444}
+.cta{background:var(--c);color:#fff}.cta h2{color:#fff}.cta p{opacity:.92}
+.btn-w{background:#fff;color:var(--c)}
+</style>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Service","name":"Citas por WhatsApp para negocios locales","serviceType":"Configuración de reservas por WhatsApp","description":"Página de citas que abre WhatsApp con el mensaje ya escrito, panel sencillo con recordatorios en un toque, página para pedir reseñas en Google, carteles QR y respuestas automáticas en WhatsApp Business.","areaServed":[{"@type":"City","name":"Oviedo"},{"@type":"City","name":"Gijón"},{"@type":"AdministrativeArea","name":"Asturias"}],"provider":{"@type":"ProfessionalService","name":"Ali Attia · Webs y reservas para negocios","url":"https://ali-webs-48h.netlify.app/","telephone":"+34677372245","email":"ali.attia@virtualy.win","areaServed":["Oviedo","Gijón","Asturias"]},"offers":[{"@type":"Offer","name":"Instalación de citas por WhatsApp (precio de lanzamiento)","price":"79","priceCurrency":"EUR","priceValidUntil":"2026-10-04"},{"@type":"Offer","name":"Web de una página + citas por WhatsApp","price":"149","priceCurrency":"EUR"}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"¿Necesito una app o cambiar de número?","acceptedAnswer":{"@type":"Answer","text":"No. Se usa tu WhatsApp de siempre. Tus clientes no instalan nada: abren tu página de citas desde Instagram, Google o un cartel QR y el mensaje les sale ya escrito."}},
+{"@type":"Question","name":"¿Las citas se confirman solas?","acceptedAnswer":{"@type":"Answer","text":"No. Te llega un WhatsApp con el servicio, el día y la hora, y tú confirmas con un mensaje. Así controlas tu agenda sin depender de una plataforma."}},
+{"@type":"Question","name":"¿Hay cuota mensual?","acceptedAnswer":{"@type":"Answer","text":"La instalación es un pago único. El mantenimiento de 19€ al mes es opcional, para cambios de horario, servicios o precios."}},
+{"@type":"Question","name":"¿Cómo se paga?","acceptedAnswer":{"@type":"Answer","text":"Por Bizum o transferencia, cuando lo tienes funcionando y te gusta."}},
+{"@type":"Question","name":"¿Sirve para mi tipo de negocio?","acceptedAnswer":{"@type":"Answer","text":"Funciona bien para negocios que dan citas o reservas: peluquerías, barberías, fisioterapia, estética, uñas, talleres, academias y sidrerías que reservan mesa."}}
+]}</script>
 <script src="config.js"></script><script src="common.js"></script>
 </head>
 <body>
-<header class="hero"><h1>Citas por WhatsApp</h1><p>Para peluquerías, fisios, talleres, academias y sidrerías de Oviedo</p></header>
+<header class="hero"><h1>Citas por WhatsApp para tu negocio</h1><p>Peluquerías, barberías, fisios, estética y sidrerías de Oviedo y Gijón</p></header>
 <main>
   <div class="card">
     <h2>Qué recibe tu negocio</h2>
-    <p>✅ <b>Página de citas</b>: tu cliente elige servicio, día y hora, y te llega un WhatsApp con todo ordenado.<br>
-    ✅ <b>Recordatorios en un toque</b>: la víspera pulsas «Recordar» y sale el mensaje escrito. Menos plantones.<br>
-    ✅ <b>Más reseñas en Google</b>: botón «Pedir reseña» + cartel QR para el mostrador.<br>
-    ✅ <b>Lista de clientes</b>: ves quién lleva tiempo sin venir y lo recuperas con un mensaje.<br>
-    ✅ <b>Respuestas automáticas</b> en tu WhatsApp Business (bienvenida, fuera de horario, respuestas rápidas).</p>
-    <p class="mut">Sin apps nuevas, sin cuotas de plataformas, con tu número de siempre.</p>
+    <ul class="lista">
+      <li><b>Página de citas</b>: tu cliente elige servicio, día y hora, y te llega un WhatsApp con todo ordenado.</li>
+      <li><b>Recordatorios en un toque</b>: la víspera pulsas «Recordar» y el mensaje sale ya escrito. Menos plantones.</li>
+      <li><b>Más reseñas en Google</b>: botón «Pedir reseña» y cartel QR para el mostrador.</li>
+      <li><b>Lista de clientes</b>: ves quién lleva tiempo sin venir y le escribes con un mensaje preparado.</li>
+      <li><b>Respuestas automáticas</b> en tu WhatsApp Business: bienvenida, fuera de horario y respuestas rápidas.</li>
+    </ul>
+    <p class="mut">Sin apps nuevas, sin comisiones por reserva y con tu número de siempre.</p>
   </div>
   <div class="card">
-    <h2>Pruébalo (negocio ficticio)</h2>
+    <h2>Pruébalo con un negocio de ejemplo</h2>
+    <p class="mut">Peluquería ficticia: los mensajes no se envían a ningún número real.</p>
     <div class="row">
-      <a class="btn btn-c" href="cita.html">1 · Página de citas (cliente)</a>
-      <a class="btn btn-c" href="panel.html">2 · Panel del negocio</a>
-      <a class="btn btn-c" href="resena.html">3 · Página de reseñas</a>
-      <a class="btn btn-c" href="qr.html">4 · Carteles QR</a>
-      <a class="btn btn-lt" href="carta.html">Extra · Carta QR sidrería</a>
+      <a class="btn btn-c" href="cita.html">1. Página de citas (cliente)</a>
+      <a class="btn btn-c" href="panel.html">2. Panel del negocio</a>
+      <a class="btn btn-c" href="resena.html">3. Página de reseñas</a>
+      <a class="btn btn-c" href="qr.html">4. Carteles QR</a>
+      <a class="btn btn-lt" href="carta.html">Extra: carta QR para sidrería</a>
     </div>
   </div>
+  <div class="card">
+    <h2>Cómo funciona</h2>
+    <ol>
+      <li>Me pasas tus servicios, duraciones, precios y horario.</li>
+      <li>En 48 horas tienes tu página de citas con tu nombre, tus colores y tu WhatsApp, más los carteles QR.</li>
+      <li>Te dejo configurado WhatsApp Business y te enseño el panel en 10 minutos.</li>
+      <li>Pones el enlace en Instagram y en tu ficha de Google, y el QR en el mostrador.</li>
+    </ol>
+  </div>
+  <div class="card" id="precio">
+    <h2>Precio</h2>
+    <div class="precios">
+      <div class="precio dest"><small>Citas por WhatsApp</small><b>79€</b><small>Pago único. Precio de lanzamiento hasta el domingo 4 de octubre; después, 99€.</small></div>
+      <div class="precio"><small>Web de una página + citas</small><b>149€</b><small>Tu web en 48 h con la reserva por WhatsApp integrada.</small></div>
+      <div class="precio"><small>Carta QR para sidrería</small><b>49€</b><small>Carta digital con QR para mesas.</small></div>
+      <div class="precio"><small>Mantenimiento (opcional)</small><b>19€<span style="font-size:14px">/mes</span></b><small>Cambios de horario, servicios y precios. Sin permanencia.</small></div>
+    </div>
+    <p class="mut">Pago por Bizum o transferencia cuando lo tienes funcionando.</p>
+  </div>
+  <div class="card">
+    <h2>Preguntas frecuentes</h2>
+    <details><summary>¿Necesito una app o cambiar de número?</summary><p>No. Se usa tu WhatsApp de siempre. Tus clientes no instalan nada: abren tu página de citas desde Instagram, Google o un cartel QR y el mensaje les sale ya escrito.</p></details>
+    <details><summary>¿Las citas se confirman solas?</summary><p>No. Te llega un WhatsApp con el servicio, el día y la hora, y tú confirmas con un mensaje. Así controlas tu agenda sin depender de una plataforma.</p></details>
+    <details><summary>¿Hay cuota mensual?</summary><p>La instalación es un pago único. El mantenimiento de 19€ al mes es opcional, para cambios de horario, servicios o precios.</p></details>
+    <details><summary>¿Cómo se paga?</summary><p>Por Bizum o transferencia, cuando lo tienes funcionando y te gusta.</p></details>
+    <details><summary>¿Sirve para mi tipo de negocio?</summary><p>Funciona bien para negocios que dan citas o reservas: peluquerías, barberías, fisioterapia, estética, uñas, talleres, academias y sidrerías que reservan mesa.</p></details>
+  </div>
+  <div class="card cta">
+    <h2>¿Lo montamos en tu negocio?</h2>
+    <p>Escríbeme por WhatsApp y te enseño cómo quedaría con tus servicios.</p>
+    <div class="row">
+      <a class="btn btn-w" href="https://wa.me/34677372245?text=Hola%20Ali%2C%20me%20interesan%20las%20citas%20por%20WhatsApp%20para%20mi%20negocio" rel="noopener">Escribir por WhatsApp</a>
+      <a class="btn btn-lt" href="mailto:ali.attia@virtualy.win?subject=Citas%20por%20WhatsApp">ali.attia@virtualy.win</a>
+    </div>
+  </div>
+  <p class="mut" style="text-align:center">¿Necesitas también página web? <a href="https://ali-webs-48h.netlify.app/">Webs en 48 horas por 99€ para negocios de Oviedo y Asturias</a></p>
 </main>
-<footer>Demo con datos ficticios · Ali Attia · Oviedo</footer>
+<footer>Demo con datos ficticios · Ali Attia · Oviedo y Gijón (Asturias)</footer>
 </body>
 </html>
