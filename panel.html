@@ -87,7 +87,7 @@ function ejemplo() {
     { nombre: "Marta G.",    tel: "34600000101", servicio: s[5], fecha: hoyMas(-30), hora: "16:30" }
   ].map((c, i) => ({ id: "e" + i, ...c, recordada: false, resena: false }));
 }
-let citas = JSON.parse(localStorage.getItem(KEY) || "null") || ejemplo();
+let citas = JSON.parse(localStorage.getItem(KEY) || "null") || (N.demo ? ejemplo() : []);
 function guardar() { localStorage.setItem(KEY, JSON.stringify(citas)); pintar(); }
 
 function vars(c) { return { nombre: c.nombre.split(" ")[0], negocio: N.nombre, fecha: fechaLarga(desdeIso(c.fecha)), hora: c.hora, servicio: c.servicio, enlace: new URL("resena.html", location.href).href }; }
@@ -162,6 +162,7 @@ document.getElementById("csv").onclick = () => {
   const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = "clientes.csv"; a.click();
 };
 document.getElementById("reset").onclick = () => { if (confirm("¿Volver a los datos de ejemplo?")) { citas = ejemplo(); guardar(); } };
+if (!N.demo) document.getElementById("reset").hidden = true;
 pintar();
 </script>
 </body>
